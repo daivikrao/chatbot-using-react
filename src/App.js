@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import axios from "axios";
+import { useSpeechSynthesis } from 'react-speech-kit';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+function App()
+{
+  const [posts,setPost] = React.useState([]);
+  const { speak,listening, stop } = useSpeechSynthesis();
+
+  React.useEffect(() => {
+    axios.get("https://v2.jokeapi.dev/joke/Programming?type=single").then(res=>{
+      setPost(res.data);
+      //console.log(posts.joke);
+    })
+    .catch(err=>{
+      console.log(err);
+    })
+  },[])
+
+  window.addEventListener('keydown', (event) => {
+    speak({ text: posts.joke })
+  });
+
+  return  <h1>Press any key to hear a JOKE 😂</h1>;
+
 }
 
 export default App;
